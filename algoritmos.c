@@ -10,13 +10,13 @@
  *
  * Integrantes:
  *   - Joao Pedro Oliveira - 17930847
- *   - NOME COMPLETO 2 - NUSP
+ *   - Matheus Amaral Alves - 17932255
  *   - NOME COMPLETO 3 - NUSP
  *   - NOME COMPLETO 4 - NUSP
  *
  * Responsaveis por cada funcao (preencher):
  *   - inverter ................... : Joao Pedro Oliveira
- *   - buscaSequencial ............ : <nome>
+ *   - buscaSequencial ............ : Matheus Amaral Alves
  *   - buscaBinariaIterativa ...... : <nome>
  *   - buscaBinariaRecursiva ...... : <nome>
  *
@@ -95,9 +95,25 @@ void inverter(int v[], int n) {
  * O benchmark usa x = v[n-1] + 1 (ausente) como pior caso.
  */
 int buscaSequencial(int v[], int n, int x) {
-    (void) v;
-    (void) n;
-    (void) x;
+    int i = 0;
+    g_atribuicoes++;
+
+    while (i < n) {
+        g_comparacoes++;
+
+        if (x == v[i]) {
+            g_comparacoes++;
+            return i;
+        }
+
+        g_comparacoes++;
+
+        i++;
+        g_atribuicoes++;
+    }
+
+    g_comparacoes++;
+
     return -1;
 }
 
