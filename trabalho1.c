@@ -15,7 +15,7 @@
  *
  * Integrantes:
  *   - Joao Pedro Oliveira - 17930847
- *   - NOME COMPLETO 2 - NUSP
+ *   - Matheus Amaral Alves - 17932255
  *   - NOME COMPLETO 3 - NUSP
  *   - NOME COMPLETO 4 - NUSP
  */
