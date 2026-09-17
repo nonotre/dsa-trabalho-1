@@ -1,0 +1,30 @@
+{
+  "registrado_em_utc": "2026-09-17T17:00:07.001340+00:00",
+  "sistema": "Linux-6.8.0-1064-azure-x86_64-with-glibc2.39",
+  "cpu": "AMD EPYC 9V74 80-Core Processor",
+  "cpu_fixada": "0",
+  "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "glibc": [
+    "glibc",
+    "2.39"
+  ],
+  "flags": "-Wall -Wextra -Werror -O2 -std=c99",
+  "execucoes_por_tamanho": 100,
+  "relogio": "CLOCK_MONOTONIC",
+  "alvo": "v[n-1] + 1",
+  "aquecimento_s": 0.3,
+  "chamadas_aquecimento": 3,
+  "sha256_fontes": {
+    "algoritmos.c": "f412c2a738c4ff774208fe5090d8e35b6dd12b32e9c9593bc89930342d765133",
+    "algoritmos.h": "bbdb530fe5cfb041df88d08c5b10722ef7cd426b3fc236ac6d1fd81f8f440d16",
+    "benchmark_binaria_iterativa.c": "7eb072bd85922508301fb54a99626aab03249c01fa966fbbb7899ca5e3d30b8f",
+    "gerador.c": "420a2b797d6b806c43c7ae67c1a63765e2d212cce5c3f09953df1c06761e9114"
+  },
+  "sha256_entradas": {
+    "dados_1000.txt": "30df9e03b972443cdc6cee0c049ee3761285b79641250c5c88668550fed7126d",
+    "dados_100000.txt": "b6a4f07d5c6a574b084a4902ea265afbb2686ae60143885a236e5a73c543f0ac",
+    "dados_1000000.txt": "4fe11dd35ceb021c325ba536e18d98c442e9d51aa628175c9b26e0c180746205",
+    "dados_50000.txt": "5acea752123022c53c731b068da1cde89abd920ce5932b36c71b4df2614628c9",
+    "dados_500000.txt": "991c68caa363e8e379cd6e751ff1b65ef66b528216e41fa2c9b7b033999d5987"
+  }
+}

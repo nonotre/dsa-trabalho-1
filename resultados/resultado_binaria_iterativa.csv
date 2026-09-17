@@ -1,0 +1,6 @@
+algoritmo,tamanho,tempo_medio_s,comparacoes_pior_caso,atribuicoes_pior_caso
+buscaBinariaIterativa,1000,0.000000044,31,22
+buscaBinariaIterativa,50000,0.000000051,49,34
+buscaBinariaIterativa,100000,0.000000053,52,36
+buscaBinariaIterativa,500000,0.000000055,58,40
+buscaBinariaIterativa,1000000,0.000000059,61,42

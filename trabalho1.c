@@ -16,7 +16,7 @@
  * Integrantes:
  *   - Joao Pedro Oliveira - 17930847
  *   - NOME COMPLETO 2 - NUSP
- *   - NOME COMPLETO 3 - NUSP
+ *   - Lorenzo Vittorio Rudnik Spelta - 17906700
  *   - NOME COMPLETO 4 - NUSP
  */
 
