@@ -119,7 +119,8 @@ números de tempo do relatório têm que vir todos da mesma rodada.
 
 ```
 algoritmos.h / .c     protótipos, convenção de contagem e as 4 funções (SEM main)
-trabalho1.c           menu de E/S — é o que vai pro Run.Codes
+trabalho1.c           menu de E/S (usa algoritmos.c)
+trabalho1_runcodes.c  arquivo ÚNICO para o Run.Codes (algoritmos + menu)
 gerador.c             gera dados/dados_<n>.txt (seed 42)
 benchmark.c           100 medições de tempo + contagem no pior caso → resultados/*.csv
 rodar_benchmark.sh    gera dados (se faltar), compila e roda o benchmark
@@ -129,5 +130,7 @@ relatorio.md          relatório final
 Casos de Teste - TRABALHO 1/   casos oficiais do professor
 ```
 
-**Entrega no Run.Codes:** se só aceitar um arquivo, cole o conteúdo de
-`algoritmos.c` em `trabalho1.c` no lugar do `#include "algoritmos.h"`.
+**Entrega no Run.Codes:** enviar `trabalho1_runcodes.c` (arquivo único
+com algoritmos + menu, gerado a partir de `algoritmos.h`/`algoritmos.c`/
+`trabalho1.c`; passa nos 5 casos oficiais byte a byte). `trabalho1.c`
+sozinho não compila lá, pois depende de `algoritmos.c`.
