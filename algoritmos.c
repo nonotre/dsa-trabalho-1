@@ -11,13 +11,13 @@
  * Integrantes:
  *   - Joao Pedro Oliveira - 17930847
  *   - Matheus Amaral Alves - 17932255
- *   - NOME COMPLETO 3 - NUSP
+ *   - Lorenzo Vittorio Rudnik Spelta - 17906700
  *   - NOME COMPLETO 4 - NUSP
  *
  * Responsaveis por cada funcao (preencher):
  *   - inverter ................... : Joao Pedro Oliveira
  *   - buscaSequencial ............ : Matheus Amaral Alves
- *   - buscaBinariaIterativa ...... : <nome>
+ *   - buscaBinariaIterativa ...... : Lorenzo Vittorio Rudnik Spelta
  *   - buscaBinariaRecursiva ...... : <nome>
  *
  * Convencao de contagem de operacoes: ver algoritmos.h. Em resumo,
@@ -150,9 +150,31 @@ int buscaSequencial(int v[], int n, int x) {
  *   n=1.000.000 -> 20 / 61 / 42
  */
 int buscaBinariaIterativa(int v[], int n, int x) {
-    (void) v;
-    (void) n;
-    (void) x;
+    int ini = 0;
+    int fim = n - 1;
+    g_atribuicoes += 2;
+
+    while (ini <= fim) {
+        g_comparacoes++;
+
+        int meio = (ini + fim) / 2;
+        g_atribuicoes++;
+
+        g_comparacoes++;
+        if (v[meio] == x) {
+            return meio;
+        }
+
+        g_comparacoes++;
+        if (v[meio] < x) {
+            ini = meio + 1;
+        } else {
+            fim = meio - 1;
+        }
+        g_atribuicoes++;
+    }
+    g_comparacoes++;
+
     return -1;
 }
 
