@@ -28,8 +28,8 @@
  *     o que forca a busca sequencial a percorrer tudo e as buscas
  *     binarias a descerem ate o intervalo vazio.
  *
- * Uso:
- *   ./benchmark
+ * Uso: ./auxiliar/rodar_benchmark.sh (compila com -Isrc e roda a partir
+ * da raiz do repositorio, onde ficam dados/ e resultados/).
  *
  * Le os vetores gerados por gerador.c em dados/dados_<tamanho>.txt e
  * escreve:

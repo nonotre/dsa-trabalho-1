@@ -2,7 +2,7 @@
 """
 Trabalho 1 - Estruturas de Dados I - ICMC-USP - 2026
 
-Le resultados/resultado_completo.csv (gerado por ./rodar_benchmark.sh)
+Le resultados/resultado_completo.csv (gerado por auxiliar/rodar_benchmark.sh)
 e gera os graficos de COMPARACAO ENTRE ALGORITMOS (secao de conclusao
 do relatorio):
 
@@ -19,14 +19,15 @@ automaticamente OMITIDOS dos graficos, para nao confundir o grupo com
 uma "curva" de tempo ~0 que na verdade e so a funcao retornando na
 hora sem fazer nada.
 
-Uso:
-    python3 grafico.py
+Uso (de qualquer pasta):
+    python3 auxiliar/grafico.py
     python3 grafico.py caminho/para/outro_resultado.csv
 
 Dependencia: matplotlib (pip install matplotlib)
 """
 
 import csv
+import os
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -113,10 +114,13 @@ def plotar(dados, chave, titulo, eixo_y, nome_arquivo):
 
 
 def main():
+    # caminhos (resultados/, graficos/) sao relativos a raiz do repositorio
+    os.chdir(Path(__file__).resolve().parent.parent)
+
     caminho_csv = sys.argv[1] if len(sys.argv) > 1 else CSV_PADRAO
 
     if not Path(caminho_csv).exists():
-        print(f"Nao encontrei {caminho_csv}. Rode ./rodar_benchmark.sh primeiro.")
+        print(f"Nao encontrei {caminho_csv}. Rode ./auxiliar/rodar_benchmark.sh primeiro.")
         sys.exit(1)
 
     dados = remover_stubs(ler_resultados(caminho_csv))

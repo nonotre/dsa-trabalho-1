@@ -8,19 +8,22 @@
 #   resultados/resultado_completo.csv   medias e operacoes (pior caso), todos os algoritmos
 #   resultados/tempos_detalhados.csv    as 100 medicoes individuais de cada (algoritmo, tamanho)
 #
-# Uso: ./rodar_benchmark.sh
+# Uso (de qualquer pasta): ./auxiliar/rodar_benchmark.sh
 
 set -e
+
+# Trabalha sempre a partir da raiz do repositorio, seja de onde for chamado.
+cd "$(dirname "$0")/.."
 
 mkdir -p dados resultados
 
 if [ ! -f dados/dados_1000.txt ]; then
     echo "Dados nao encontrados, gerando..."
-    gcc -Wall -Wextra -std=c99 -o gerador gerador.c
+    gcc -Wall -Wextra -std=c99 -o gerador auxiliar/gerador.c
     ./gerador
 fi
 
-gcc -Wall -Wextra -O2 -std=c99 -o benchmark benchmark.c algoritmos.c
+gcc -Wall -Wextra -O2 -std=c99 -Isrc -o benchmark auxiliar/benchmark.c src/algoritmos.c
 
 # Fixa o processo em um unico nucleo (CPU 1, um P-core na maquina de
 # referencia): em processadores hibridos (P-cores + E-cores) o

@@ -7,11 +7,11 @@
  * algoritmos.c/algoritmos.h, compartilhadas com o codigo de
  * benchmark (que roda separadamente, fora do Run.Codes).
  *
- * IMPORTANTE (entrega no Run.Codes): se o Run.Codes so aceitar UM
- * arquivo por submissao, cole aqui o conteudo de algoritmos.c no
- * lugar do "#include "algoritmos.h"" antes de enviar.
+ * A versao em arquivo unico enviada ao Run.Codes (este menu + os
+ * algoritmos) esta em entrega/trabalho1_runcodes.c.
  *
- * Compilar localmente: gcc -Wall -Wextra -std=c99 -o trabalho1 trabalho1.c algoritmos.c
+ * Compilar: gcc -Wall -Wextra -std=c99 -Isrc -o trabalho1 src/trabalho1.c src/algoritmos.c
+ * Testar:   ./testes/rodar_testes.sh
  *
  * Integrantes:
  *   - Joao Pedro Oliveira - 17930847

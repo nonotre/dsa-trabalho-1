@@ -12,13 +12,14 @@ as 100 medicoes e a media:
 Algoritmos ainda nao implementados (stub, 0 comparacoes em
 resultados/resultado_completo.csv) sao pulados.
 
-Uso:
-    python3 grafico_medicoes.py
+Uso (de qualquer pasta):
+    python3 auxiliar/grafico_medicoes.py
 
 Dependencia: matplotlib (pip install matplotlib)
 """
 
 import csv
+import os
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -103,9 +104,12 @@ def plotar_algoritmo(alg, por_tamanho):
 
 
 def main():
+    # caminhos (resultados/, graficos/) sao relativos a raiz do repositorio
+    os.chdir(Path(__file__).resolve().parent.parent)
+
     for caminho in (CSV_DETALHADO, CSV_RESUMO):
         if not Path(caminho).exists():
-            print(f"Nao encontrei {caminho}. Rode ./rodar_benchmark.sh primeiro.")
+            print(f"Nao encontrei {caminho}. Rode ./auxiliar/rodar_benchmark.sh primeiro.")
             sys.exit(1)
 
     implementados = algoritmos_implementados(CSV_RESUMO)
