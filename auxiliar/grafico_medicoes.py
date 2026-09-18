@@ -20,6 +20,7 @@ Dependencia: matplotlib (pip install matplotlib)
 
 import csv
 import os
+import statistics
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -29,7 +30,7 @@ import matplotlib.pyplot as plt
 CSV_DETALHADO = "resultados/tempos_detalhados.csv"
 CSV_RESUMO = "resultados/resultado_completo.csv"
 PASTA_SAIDA = "graficos"
-LIMITE_OUTLIER = 3.0  # pontos acima de 3x a mediana sao anotados fora da escala
+LIMITE_OUTLIER = 2.0
 
 
 def algoritmos_implementados(caminho_resumo):
@@ -70,12 +71,8 @@ def plotar_algoritmo(alg, por_tamanho):
         repeticoes = [p[0] for p in pares]
         tempos = [p[1] * 1e6 for p in pares]  # segundos -> microssegundos
         media = sum(tempos) / len(tempos)
-        mediana = sorted(tempos)[len(tempos) // 2]
+        mediana = statistics.median(tempos)
 
-        # Um unico pico muito alto (ex: uma interrupcao do SO de varios
-        # microssegundos numa chamada de 40 ns) achataria todo o painel.
-        # Limita o eixo y a LIMITE_OUTLIER x a mediana e anota quantos
-        # pontos ficaram fora da escala, com o valor do maior deles.
         teto = LIMITE_OUTLIER * mediana
         fora = [t for t in tempos if t > teto]
         dentro = [(r, t) for r, t in zip(repeticoes, tempos) if t <= teto]
@@ -90,7 +87,7 @@ def plotar_algoritmo(alg, por_tamanho):
         eixo.set_title(f"n = {tamanho:,}".replace(",", "."))
         eixo.set_xlabel(f"Execucao (1 a {len(pares)})")
         eixo.grid(True, linestyle="--", alpha=0.4)
-        eixo.legend(fontsize=8)
+        eixo.legend(fontsize=8, loc="upper right", framealpha=0.9)
 
     eixos[0].set_ylabel("Tempo (us)")
     fig.suptitle(f"{alg} — {len(por_tamanho[tamanhos[0]])} medicoes de tempo por tamanho de entrada")

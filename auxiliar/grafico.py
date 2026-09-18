@@ -81,11 +81,19 @@ def remover_stubs(dados):
     return implementados
 
 
+ESTILOS = {
+    "inverter": dict(marker="o", linestyle="-"),
+    "buscaSequencial": dict(marker="s", linestyle="-"),
+    "buscaBinariaIterativa": dict(marker="o", linestyle="-", markersize=9),
+    "buscaBinariaRecursiva": dict(marker="x", linestyle="--", markersize=8),
+}
+
+
 def plotar(dados, chave, titulo, eixo_y, nome_arquivo):
     plt.figure(figsize=(8, 5))
     todos_tamanhos = set()
     for alg, serie in sorted(dados.items()):
-        plt.plot(serie["tamanhos"], serie[chave], marker="o", label=alg)
+        plt.plot(serie["tamanhos"], serie[chave], label=alg, **ESTILOS.get(alg, dict(marker="o")))
         todos_tamanhos.update(serie["tamanhos"])
 
     eixo = plt.gca()
