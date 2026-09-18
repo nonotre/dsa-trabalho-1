@@ -10,11 +10,12 @@ tempo de execução, contagem de operações e análise assintótica.
 |---|---|---|
 | `inverter` | João Pedro Oliveira | feito |
 | `buscaSequencial` | Matheus Amaral Alves | feito |
-| `buscaBinariaIterativa` | *(nome)* | TODO |
-| `buscaBinariaRecursiva` | *(nome)* | TODO |
+| `buscaBinariaIterativa` | Lorenzo Vittorio Rudnik Spelta | feito |
+| `buscaBinariaRecursiva` | Gustavo Cestari Cassaro Mendes | feito |
 
-Cada um mexe **só na sua função em `algoritmos.c`**. Todo o resto
-(menu, benchmark, gráficos, relatório) já está pronto e chama ela.
+**Estado: as quatro funções estão integradas em `master`, os 5 casos
+oficiais passam e o relatório está com a rodada final de medições.**
+O que segue é o fluxo que foi usado para chegar aqui.
 
 ## 1. Clonar e criar sua branch
 
@@ -26,8 +27,8 @@ git checkout -b busca-sequencial      # ou busca-binaria-iterativa / busca-binar
 
 ## 2. Implementar
 
-Abra `algoritmos.c`, ache sua função (tem `TODO`, o pseudocódigo de
-referência e o T(n) esperado no comentário). Regras:
+Abra `algoritmos.c`, ache sua função (o comentário traz o pseudocódigo de
+referência e o T(n) esperado). Regras:
 
 - C puro, sem bibliotecas externas.
 - Siga **exatamente** o pseudocódigo do comentário — o relatório já
@@ -74,6 +75,10 @@ python3 grafico.py            # graficos/tempo_medio.png, comparacoes.png, atrib
 python3 grafico_medicoes.py   # graficos/<sua_funcao>_100_medicoes.png
 ```
 
+`rodar_benchmark.sh` coloca o perfil de energia em `performance` durante
+a medição (e restaura depois) e fixa o processo em um núcleo; sem isso os
+tempos variam até 2,7× entre rodadas na mesma máquina.
+
 (`pip install --user matplotlib` uma vez.) Confira em
 `resultados/resultado_completo.csv` se as contagens bateram com a tabela
 acima. Funções ainda não implementadas aparecem com 0 e são ignoradas
@@ -92,21 +97,23 @@ Depois abra o PR no GitHub (link que aparece no `push`, ou
 teste oficial passando, contagens batendo com a tabela.
 
 Não commite os binários (`trabalho1`, `gerador`, `benchmark` já estão no
-`.gitignore`) nem `dados/` (14 MB; é regenerado com seed fixa).
+`.gitignore`) nem `dados/` (14 MB; é regenerado com seed fixa). Não crie
+benchmark/scripts paralelos — o `benchmark.c` e os dois `grafico*.py` já
+medem e plotam as quatro funções; se faltar algo, altere eles.
+
+Os números de tempo do relatório final vêm de **uma rodada só, numa
+única máquina**, feita depois do merge de todas as funções (tempos de
+máquinas diferentes não são comparáveis). As suas contagens de
+operações, sim, precisam bater com a tabela antes do PR. Se editar o
+`relatorio.md` no Windows, salve com fim de linha LF, não CRLF.
 
 ## 6. Relatório
 
-`relatorio.md` já tem metodologia, análise teórica dos quatro algoritmos
-e a conclusão rascunhada. Falta, para cada busca:
-
-- Seção 2.3/2.4/2.5: trocar os `-` da tabela pelos números do
-  `resultado_completo.csv`, e reescrever a **Discussão** (hoje em
-  itálico como rascunho) olhando o seu `graficos/<funcao>_100_medicoes.png`.
-- Seção 4.1: coluna de tempo da sua função.
-- Seção 4.5: trocar os `[X]` pelos números medidos.
-- Cabeçalho e Seção 5: nome, NUSP e contribuição.
-
-Faça isso na mesma branch/PR da sua função.
+`relatorio.md` está completo (metodologia, análise empírica das quatro
+funções, análise teórica, conclusão e contribuições). Se alguma função
+mudar, refaça `./rodar_benchmark.sh` + os dois `grafico*.py` e atualize
+as tabelas das seções 2.x e 4.1 com o `resultado_completo.csv` — os
+números de tempo do relatório têm que vir todos da mesma rodada.
 
 ## Estrutura
 

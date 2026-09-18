@@ -12,13 +12,13 @@
  *   - Joao Pedro Oliveira - 17930847
  *   - Matheus Amaral Alves - 17932255
  *   - Lorenzo Vittorio Rudnik Spelta - 17906700
- *   - NOME COMPLETO 4 - NUSP
+ *   - Gustavo Cestari Cassaro Mendes - 17990719
  *
- * Responsaveis por cada funcao (preencher):
+ * Responsaveis por cada funcao:
  *   - inverter ................... : Joao Pedro Oliveira
  *   - buscaSequencial ............ : Matheus Amaral Alves
  *   - buscaBinariaIterativa ...... : Lorenzo Vittorio Rudnik Spelta
- *   - buscaBinariaRecursiva ...... : <nome>
+ *   - buscaBinariaRecursiva ...... : Gustavo Cestari Cassaro Mendes
  *
  * Convencao de contagem de operacoes: ver algoritmos.h. Em resumo,
  * conta-se toda comparacao (condicao de laco e de if) e toda
@@ -76,9 +76,9 @@ void inverter(int v[], int n) {
  * Busca sequencial de x em v[0..n-1].
  * Retorna o indice de x se encontrado, ou -1 caso contrario.
  *
- * TODO: implementar - responsavel: <nome>
+ * responsavel: Matheus Amaral Alves
  *
- * Pseudocodigo de referencia (o relatorio ja assume exatamente este):
+ * Algoritmo e pontos de contagem:
  *
  *     i = 0;                         // 1 atribuicao
  *     while (i < n) {                // 1 comparacao por avaliacao
@@ -119,9 +119,9 @@ int buscaSequencial(int v[], int n, int x) {
  * Busca binaria iterativa de x em v[0..n-1] (v deve estar ordenado).
  * Retorna o indice de x se encontrado, ou -1 caso contrario.
  *
- * TODO: implementar - responsavel: <nome>
+ * responsavel: Lorenzo Vittorio Rudnik Spelta
  *
- * Pseudocodigo de referencia (o relatorio ja assume exatamente este):
+ * Algoritmo e pontos de contagem:
  *
  *     ini = 0; fim = n - 1;                    // 2 atribuicoes
  *     while (ini <= fim) {                     // 1 comparacao
@@ -182,9 +182,9 @@ int buscaBinariaIterativa(int v[], int n, int x) {
  * Busca binaria recursiva de x em v[0..n-1] (v deve estar ordenado).
  * Retorna o indice de x se encontrado, ou -1 caso contrario.
  *
- * TODO: implementar - responsavel: <nome>
+ * responsavel: Gustavo Cestari Cassaro Mendes
  *
- * Pseudocodigo de referencia (o relatorio ja assume exatamente este):
+ * Implementacao (a funcao auxiliar bbRec recebe o intervalo [ini, fim]):
  *
  *     static int bbRec(int v[], int ini, int fim, int x) {
  *         if (ini > fim) return -1;                          // 1 comparacao
@@ -214,9 +214,27 @@ int buscaBinariaIterativa(int v[], int n, int x) {
  *   n=500.000   -> 58 / 19
  *   n=1.000.000 -> 61 / 20
  */
+static int bbRec(int v[], int ini, int fim, int x) {
+    g_comparacoes++;
+    if (ini > fim) {
+        return -1;
+    }
+
+    int meio = (ini + fim) / 2;
+    g_atribuicoes++;
+
+    g_comparacoes++;
+    if (v[meio] == x) {
+        return meio;
+    }
+
+    g_comparacoes++;
+    if (v[meio] < x) {
+        return bbRec(v, meio + 1, fim, x);
+    }
+    return bbRec(v, ini, meio - 1, x);
+}
+
 int buscaBinariaRecursiva(int v[], int n, int x) {
-    (void) v;
-    (void) n;
-    (void) x;
-    return -1;
+    return bbRec(v, 0, n - 1, x);
 }

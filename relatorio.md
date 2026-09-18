@@ -4,9 +4,9 @@ Estruturas de Dados I — ICMC-USP — 2026
 
 **Integrantes:**
 - João Pedro Oliveira — 17930847
-- *(nome completo)* — *(NUSP)*
-- *(nome completo)* — *(NUSP)*
-- *(nome completo)* — *(NUSP)*
+- Matheus Amaral Alves — 17932255
+- Lorenzo Vittorio Rudnik Spelta — 17906700
+- Gustavo Cestari Cassaro Mendes — 17990719
 
 ---
 
@@ -48,8 +48,15 @@ os quatro algoritmos e a Seção 5 a contribuição de cada integrante.
 
 **Ambiente.** Todas as medições foram feitas na mesma máquina:
 processador Intel Core Ultra 7 258V (8 núcleos), 30 GB de RAM, Linux
-(kernel 7.1), compilador gcc 16.2.1. O código foi compilado com
-`gcc -O2 -std=c99 -Wall -Wextra`.
+(kernel 7.1), compilador gcc 16.2.1, com o perfil de energia do
+sistema em `performance` durante o benchmark (o perfil `power-saver`
+do notebook limita a frequência e deixou os tempos cerca de 2,7×
+maiores em uma rodada de controle, sem alterar nenhuma contagem). O
+código foi compilado com `gcc -O2 -std=c99 -Wall -Wextra`. Todos os
+números de tempo deste relatório vêm de uma única rodada, feita após
+a integração das funções de todos os integrantes; medições feitas
+individualmente em outras máquinas foram usadas apenas para
+validação das contagens.
 
 **Dados de entrada.** Os vetores foram gerados por `gerador.c` com
 semente fixa (`srand(42)`), para que qualquer integrante reproduza
@@ -113,11 +120,11 @@ apenas de `n`.
 
 | n | tempo médio (s) | comparações (medido) | comparações (teórico) | atribuições (medido) | atribuições (teórico) |
 |---|---|---|---|---|---|
-| 1.000 | 0,000000391 | 501 | 501 | 2.502 | 2.502 |
-| 50.000 | 0,000019028 | 25.001 | 25.001 | 125.002 | 125.002 |
-| 100.000 | 0,000038122 | 50.001 | 50.001 | 250.002 | 250.002 |
-| 500.000 | 0,000190029 | 250.001 | 250.001 | 1.250.002 | 1.250.002 |
-| 1.000.000 | 0,000394855 | 500.001 | 500.001 | 2.500.002 | 2.500.002 |
+| 1.000 | 0,000000226 | 501 | 501 | 2.502 | 2.502 |
+| 50.000 | 0,000011899 | 25.001 | 25.001 | 125.002 | 125.002 |
+| 100.000 | 0,000023007 | 50.001 | 50.001 | 250.002 | 250.002 |
+| 500.000 | 0,000113124 | 250.001 | 250.001 | 1.250.002 | 1.250.002 |
+| 1.000.000 | 0,000237580 | 500.001 | 500.001 | 2.500.002 | 2.500.002 |
 
 O gráfico abaixo mostra as 100 medições de tempo de cada tamanho
 separadamente (um painel por tamanho; a linha tracejada é a média):
@@ -138,11 +145,11 @@ alocação de memória.
 
 Nos tempos, as razões entre tamanhos consecutivos confirmam a
 linearidade com precisão: de 50.000 para 100.000 o tempo cresce
-2,00×; de 100.000 para 500.000, 4,98×; de 500.000 para 1.000.000,
-2,08×; e de 1.000 para 1.000.000 (1000× mais elementos), 1010×. O
+1,93×; de 100.000 para 500.000, 4,92×; de 500.000 para 1.000.000,
+2,10×; e de 1.000 para 1.000.000 (1000× mais elementos), 1051×. O
 custo por elemento é praticamente constante em todos os tamanhos,
-cerca de 0,38–0,39 ns — ou seja, o tempo é bem descrito por
-T(n) ≈ 0,39·n ns, uma reta de inclinação 1 no gráfico log-log da
+cerca de 0,23–0,24 ns — ou seja, o tempo é bem descrito por
+T(n) ≈ 0,23·n ns, uma reta de inclinação 1 no gráfico log-log da
 Seção 4. O fato de o custo por elemento não aumentar em
 n = 1.000.000 (vetor de 4 MB, que já não cabe na cache L2) indica
 que o acesso sequencial pelos dois extremos do vetor é bem servido
@@ -152,7 +159,7 @@ limitada pela memória.
 Vale registrar uma armadilha de medição encontrada durante o
 trabalho. Em uma rodada anterior, sem o aquecimento global de
 0,3 s descrito na Seção 2.1, o custo por elemento parecia cair
-pela metade entre 100.000 e 500.000 (0,70 contra 0,38 ns). A causa
+pela metade entre 100.000 e 500.000. A causa
 não era o algoritmo: os tamanhos são medidos em ordem crescente e os
 pequenos terminam em poucos milissegundos, antes de o governador de
 frequência elevar o clock do núcleo; os grandes já rodavam com o
@@ -160,81 +167,192 @@ núcleo na frequência máxima. Manter o processador ocupado por
 alguns décimos de segundo antes de cada tamanho eliminou o efeito.
 
 O gráfico das 100 medições mostra, para todos os tamanhos, um platô
-bem definido — mediana de 18,45 µs em n = 50.000, 36,94 µs em
-100.000, 187,8 µs em 500.000 e 389,6 µs em 1.000.000, sempre
-coincidindo com o mínimo observado a menos de 0,3 % — sobre o qual
-aparecem picos isolados de até 1,2–1,8× o valor típico. Esses picos
-são interferência do sistema operacional (troca de contexto,
-interrupções), não do algoritmo, que executa exatamente o mesmo
-número de operações em todas as execuções. Como os picos são sempre
-para cima, a média fica ligeiramente acima da mediana (394,9 µs
-contra 389,6 µs em n = 1.000.000, diferença de 1,3 %). Em
-n = 1.000 as medições se agrupam em dois "degraus" (~0,35 e
-~0,42 µs): em uma medição de poucas centenas de nanossegundos, o
-próprio custo da chamada de `clock_gettime` e a granularidade da
-frequência do processador são visíveis, e a média (0,39 µs) é a
-menos confiável das cinco em termos absolutos — embora, mesmo
-assim, a razão para n = 1.000.000 tenha ficado dentro de 1 % do
-esperado.
+bem definido — mediana de 11,86 µs em n = 50.000, 22,32 µs em
+100.000, 112,7 µs em 500.000 e 235,1 µs em 1.000.000, esta última
+coincidindo com o mínimo observado (234,9 µs) a menos de 0,1 % —
+sobre o qual aparecem picos isolados de até cerca de 1,25× o valor
+típico. Esses picos são interferência do sistema operacional (troca
+de contexto, interrupções), não do algoritmo, que executa exatamente
+o mesmo número de operações em todas as execuções. Como os picos são
+sempre para cima, a média fica ligeiramente acima da mediana
+(237,6 µs contra 235,1 µs em n = 1.000.000, diferença de 1,0 %). Em
+100.000 aparece também um "degrau" curto, alguns por cento acima do
+platô, que eleva a média 3,1 % em relação à mediana — provavelmente
+uma interrupção periódica do sistema coincidindo com essas chamadas.
+Em n = 1.000 a dispersão relativa é a maior das cinco (0,21 a
+0,26 µs): em uma medição de poucas centenas de nanossegundos, o
+próprio custo da chamada de `clock_gettime` (dezenas de
+nanossegundos) é uma fração visível do total, e por isso a média
+desse tamanho é a menos confiável em termos absolutos — embora,
+mesmo assim, a razão para n = 1.000.000 tenha ficado dentro de 5 %
+do esperado.
 
 ### 2.3 Busca Sequencial (`buscaSequencial`)
 
 | n | tempo médio (s) | comparações (medido) | comparações (teórico) | atribuições (medido) | atribuições (teórico) |
 |---|---|---|---|---|---|
-| 1.000 | 0,000000521 | 2.001 | 2.001 | 1.001 | 1.001 |
-| 50.000 | 0,000024338 | 100.001 | 100.001 | 50.001 | 50.001 |
-| 100.000 | 0,000048707 | 200.001 | 200.001 | 100.001 | 100.001 |
-| 500.000 | 0,000254083 | 1.000.001 | 1.000.001 | 500.001 | 500.001 |
-| 1.000.000 | 0,000555682 | 2.000.001 | 2.000.001 | 1.000.001 | 1.000.001 |
+| 1.000 | 0,000000262 | 2.001 | 2.001 | 1.001 | 1.001 |
+| 50.000 | 0,000011108 | 100.001 | 100.001 | 50.001 | 50.001 |
+| 100.000 | 0,000021520 | 200.001 | 200.001 | 100.001 | 100.001 |
+| 500.000 | 0,000106299 | 1.000.001 | 1.000.001 | 500.001 | 500.001 |
+| 1.000.000 | 0,000223672 | 2.000.001 | 2.000.001 | 1.000.001 | 1.000.001 |
 
 ![100 medições de tempo da busca sequencial, por tamanho](graficos/buscaSequencial_100_medicoes.png)
 
-**Discussão.** As contagens medidas coincidiram com as teóricas (2n + 1 comparações e n + 1 atribuições), já que no pior caso — valor ausente — a busca sequencial percorre o vetor inteiro, independentemente dos valores armazenados. O tempo médio cresceu aproximadamente de forma linear com `n`, como esperado para um algoritmo de complexidade O(n). No gráfico log-log, a inclinação é semelhante à do `inverter`, embora a busca sequencial apresente uma constante um pouco maior: ela visita todos os `n` elementos e realiza duas comparações por elemento, enquanto o `inverter` visita apenas n/2 pares. Nas 100 medições individuais, observa-se estabilidade em torno da média, com eventuais picos isolados causados por interferência do sistema operacional.
+**Discussão.** As contagens medidas coincidem exatamente com as
+teóricas da Seção 3.3 (2n + 1 comparações e n + 1 atribuições): no
+pior caso — valor ausente — a busca sequencial percorre o vetor
+inteiro, independentemente dos valores armazenados, e cada elemento
+custa duas comparações (`i < n` e `v[i] == x`) e uma atribuição
+(`i++`).
+
+O tempo médio cresce linearmente com `n`: de 50.000 para 100.000,
+1,94×; de 100.000 para 500.000, 4,94×; de 500.000 para 1.000.000,
+2,10×. O custo por elemento fica em torno de 0,21–0,22 ns (em
+n = 1.000 sobe para 0,26 ns por causa do custo fixo da leitura do
+relógio, que pesa mais em uma chamada de 0,26 µs), e no gráfico
+log-log da Seção 4 a curva é uma reta de inclinação 1, praticamente
+sobreposta à do `inverter`. Esse resultado merece atenção: a busca
+sequencial faz cerca de 4× mais comparações que o `inverter` para o
+mesmo `n` (2n + 1 contra ⌊n/2⌋ + 1), mas em tempo ficou ligeiramente
+**mais rápida** (223,7 µs contra 237,6 µs em n = 1.000.000, razão
+de 0,94). A explicação é que a contagem de operações e o tempo medem
+coisas diferentes. A busca só lê o vetor, em uma varredura contígua
+que o *prefetch* da cache serve com eficiência, e sua comparação
+`v[i] == x` é sempre falsa no pior caso, o que o preditor de desvios
+do processador acerta em todas as iterações. Já o `inverter` lê e
+**escreve** duas posições por iteração, em dois pontos distantes do
+vetor, o que gera mais tráfego de memória por elemento visitado. Isso
+ilustra por que a contagem de operações é a métrica adequada para
+classificar algoritmos (ambos são O(n), com constantes 2 e 1/2 em
+comparações), enquanto o tempo absoluto depende de detalhes da
+arquitetura que a análise assintótica deliberadamente ignora.
+
+Nas 100 medições individuais, todos os tamanhos apresentam um platô
+estável (mediana de 10,81 µs em n = 50.000, 21,00 µs em 100.000,
+104,95 µs em 500.000 e 218,7 µs em 1.000.000, com mínimo de
+212,7 µs) e picos isolados causados por interferência do sistema
+operacional — o maior deles, em n = 1.000.000, de 330 µs (1,5× o
+valor típico), suficiente para puxar a média 2,3 % acima da mediana.
+Em 50.000 e 100.000 aparecem degraus curtos nas primeiras execuções,
+alguns por cento acima do platô, efeito residual de aquecimento que
+se dissipa em poucas dezenas de chamadas; como o `inverter` foi
+medido imediatamente antes com o mesmo vetor, esse efeito não é de
+cache de dados, mas provavelmente de cache de instruções e do
+preditor de desvios para o novo trecho de código.
 
 ### 2.4 Busca Binária Iterativa (`buscaBinariaIterativa`)
 
 | n | tempo médio (s) | comparações (medido) | comparações (teórico) | atribuições (medido) | atribuições (teórico) |
 |---|---|---|---|---|---|
-| 1.000 | 0,000000035 | 31 | 31 | 22 | 22 |
-| 50.000 | 0,000000039 | 49 | 49 | 34 | 34 |
-| 100.000 | 0,000000040 | 52 | 52 | 36 | 36 |
-| 500.000 | 0,000000043 | 58 | 58 | 40 | 40 |
-| 1.000.000 | 0,000000044 | 61 | 61 | 42 | 42 |
+| 1.000 | 0,000000024 | 31 | 31 | 22 | 22 |
+| 50.000 | 0,000000028 | 49 | 49 | 34 | 34 |
+| 100.000 | 0,000000029 | 52 | 52 | 36 | 36 |
+| 500.000 | 0,000000032 | 58 | 58 | 40 | 40 |
+| 1.000.000 | 0,000000036 | 61 | 61 | 42 | 42 |
 
-![100 medições da busca binária iterativa por tamanho](graficos/buscaBinariaIterativa_100_medicoes.png)
+![100 medições de tempo da busca binária iterativa, por tamanho](graficos/buscaBinariaIterativa_100_medicoes.png)
 
-**Discussão.** As contagens medidas coincidiram com as teóricas em todos os tamanhos: sendo k = ⌊log₂ n⌋ + 1, a função realiza 3k + 1 comparações e 2k + 2 atribuições no pior caso utilizado. O alvo foi `v[n-1] + 1`, ausente e maior que todos os elementos, de modo que a busca sempre segue pela metade direita até o intervalo ficar vazio. Ao passar de 1.000 para 1.000.000 de elementos, o número de iterações aumenta de 10 para 20; as comparações passam de 31 para 61 e as atribuições, de 22 para 42. Esse crescimento confirma a função de custo logarítmica.
+**Discussão.** As contagens medidas coincidiram com as teóricas em
+todos os tamanhos: sendo k = ⌊log₂ n⌋ + 1, a função realiza 3k + 1
+comparações e 2k + 2 atribuições no pior caso utilizado. O alvo foi
+`v[n-1] + 1`, ausente e maior que todos os elementos, de modo que a
+busca sempre segue pela metade direita até o intervalo ficar vazio. Ao
+passar de 1.000 para 1.000.000 de elementos, o número de iterações
+aumenta de 10 para 20; as comparações passam de 31 para 61 e as
+atribuições, de 22 para 42. Esse crescimento confirma a função de
+custo logarítmica.
 
-Nesta rodada, os tempos médios registrados foram 35, 39, 40, 43, 44 ns, respectivamente. As chamadas são muito curtas, e o custo de leitura do relógio, a instrumentação, os efeitos de cache e o escalonamento têm peso relevante no tempo observado. Os pontos do gráfico se concentram em poucos patamares, com variações entre chamadas. Por isso, a pequena diferença entre as médias não deve ser interpretada como custo constante: a evidência mais clara do crescimento O(log n) é a contagem determinística de operações. As 100 repetições usam o mesmo vetor e alvo após aquecimento; os resultados descrevem esse cenário e não representam todas as possíveis cargas de busca.
+Os tempos médios foram 24, 28, 30, 32 e 36 ns para os cinco
+tamanhos (medianas de 23, 27, 29, 31 e 35 ns) — cada chamada
+completa em algumas dezenas de nanossegundos mesmo para um milhão de
+elementos, contra 223,7 µs da busca sequencial no mesmo vetor (uma
+diferença de cerca de 6.200×). O crescimento do tempo com `n` é
+pequeno, mas visível e coerente com o número de iterações: 10
+iterações em cerca de 24 ns e 20 iterações em cerca de 36 ns. O
+salto proporcionalmente maior entre 500.000 e 1.000.000 (32 → 36 ns),
+sem mudança equivalente nas operações (58 → 61 comparações), tem
+outra origem: com 4 MB, o vetor deixa de caber na cache L2 e os
+primeiros acessos da busca — a posições distantes entre si — passam
+a custar uma falta de cache cada um.
 
-**Origem destas medições.** Execução real no ambiente Linux do assistente, separado do CS50 e do computador do aluno: AMD EPYC 9V74 80-Core Processor, Linux-6.18.44-x86_64-with-glibc2.39, gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0, CPU lógica 0. Compilação: `gcc -Wall -Wextra -Werror -O2 -std=c99`. Foram usados os vetores do `gerador.c` do grupo (semente 42), aquecimento de 0,3 s e três chamadas descartadas, seguidos de 100 chamadas cronometradas individualmente com `clock_gettime(CLOCK_MONOTONIC)` por tamanho. A leitura e geração dos vetores ficam fora do intervalo cronometrado. As comparações e atribuições foram contadas em uma chamada adicional, com contadores zerados pelo benchmark. O tempo inclui a instrumentação da função. Os CSVs guardam segundos com nove casas decimais.
-
-**Arquivos desta parte.** `resultados/resultado_binaria_iterativa.csv`, `resultados/tempos_binaria_iterativa.csv` e `resultados/ambiente_binaria_iterativa.json`. A semente reproduz os dados com a mesma implementação de `rand`; os hashes das entradas identificam os vetores efetivamente usados. As medições das outras funções, feitas por colegas em outro ambiente, não permitem calcular diretamente uma razão de velocidade entre algoritmos. Uma comparação de tempos deve usar uma nova rodada conjunta na mesma máquina.
-
+Nessa escala, o custo da leitura do relógio (`clock_gettime`, da
+ordem de 20 ns) e a instrumentação dos contadores são uma fração
+relevante do tempo medido, o que se reflete no gráfico das 100
+medições: os pontos se concentram em dois ou três patamares
+separados por 1 ns (granularidade do relógio), com alguns picos
+isolados de até 43–57 ns (cerca de 1,6–1,9× a mediana),
+concentrados nas primeiras execuções de cada tamanho. Por isso a
+diferença entre as médias
+dos tamanhos deve ser lida qualitativamente. A evidência sólida do
+comportamento O(log n) é a contagem determinística de operações, que
+reproduz exatamente 3k + 1 e 2k + 2 em todos os tamanhos.
 
 ### 2.5 Busca Binária Recursiva (`buscaBinariaRecursiva`)
 
 | n | tempo médio (s) | comparações (medido) | comparações (teórico) | atribuições (medido) | atribuições (teórico) |
 |---|---|---|---|---|---|
-| 1.000 | - | - | 31 | - | 10 |
-| 50.000 | - | - | 49 | - | 16 |
-| 100.000 | - | - | 52 | - | 17 |
-| 500.000 | - | - | 58 | - | 19 |
-| 1.000.000 | - | - | 61 | - | 20 |
+| 1.000 | 0,000000024 | 31 | 31 | 10 | 10 |
+| 50.000 | 0,000000032 | 49 | 49 | 16 | 16 |
+| 100.000 | 0,000000034 | 52 | 52 | 17 | 17 |
+| 500.000 | 0,000000124 | 58 | 58 | 19 | 19 |
+| 1.000.000 | 0,000000040 | 61 | 61 | 20 | 20 |
 
 ![100 medições de tempo da busca binária recursiva, por tamanho](graficos/buscaBinariaRecursiva_100_medicoes.png)
 
-**Discussão.** *(rascunho — confirmar com os dados)* *Espera-se o
-mesmo número de comparações da versão iterativa, pois as duas
-implementações percorrem exatamente a mesma sequência de intervalos.
-O número de atribuições é menor apenas por uma questão de convenção
-(a atualização dos limites `ini`/`fim` acontece por passagem de
-parâmetro, que não é contada, ver Seção 3.1). Em tempo, espera-se
-que a versão recursiva seja ligeiramente mais lenta que a iterativa,
-por causa do custo de cada chamada de função (empilhamento de
-parâmetros, endereço de retorno e desempilhamento), que se repete
-⌊log₂ n⌋ + 2 vezes; ainda assim, ambas devem permanecer na mesma
-ordem de grandeza e muito abaixo dos algoritmos lineares.*
+**Discussão.** As contagens medidas coincidem exatamente com as
+teóricas da Seção 3.5: sendo k = ⌊log₂ n⌋ + 1 o número de chamadas
+"cheias" (que calculam `meio`), a função realiza 3k + 1 comparações
+e k atribuições no pior caso. As comparações são idênticas às da
+versão iterativa (31, 49, 52, 58 e 61), pois as duas implementações
+percorrem exatamente a mesma sequência de intervalos: a recursão
+apenas substitui o laço `while` por uma chamada de função e a
+atualização de `ini`/`fim` por passagem de parâmetro. É essa
+substituição que explica as atribuições menores (10 contra 22 em
+n = 1.000; 20 contra 42 em n = 1.000.000): pela convenção da Seção
+3.1, passagem de parâmetro não conta como atribuição, e a única
+variável atribuída em cada chamada é `meio`. Trata-se de uma
+diferença de convenção de contagem, não de trabalho realizado — o
+processador ainda precisa colocar os novos limites em registradores
+ou na pilha a cada chamada.
+
+Em tempo, a versão recursiva ficou ligeiramente mais lenta que a
+iterativa: médias de 24, 32, 34 e 40 ns em n = 1.000, 50.000,
+100.000 e 1.000.000 (medianas de 24, 31, 33 e 39,5 ns), contra 24,
+28, 30 e 36 ns da iterativa. Em n = 1.000.000 a diferença é de cerca
+de 11 % pelas médias (13 % pelas medianas), atribuível à sobrecarga
+de cada chamada de função — empilhar o endereço de retorno, passar
+quatro parâmetros e desempilhar no retorno — repetida nos
+⌊log₂ n⌋ + 2 níveis da recursão. Em n = 1.000 as duas versões são
+indistinguíveis (24 ns), o que indica que a sobrecarga por nível é
+da ordem de meio nanossegundo e só se torna mensurável com o dobro
+de níveis. Como previsto pela análise teórica, a diferença é de
+constante e não altera a classe O(log n).
+
+O caso de n = 500.000 exige um comentário à parte. A média
+registrada, 124 ns, é três vezes a mediana (41 ns) e destoa da
+tendência dos demais tamanhos. A causa é uma única medição, de
+8,27 µs — cerca de 200 vezes o valor típico —, correspondente a uma
+interrupção do sistema operacional que caiu dentro de uma chamada de
+40 ns; as outras 99 medições ficaram entre 37 e 56 ns. No gráfico
+das 100 medições esse ponto aparece como um marcador vermelho "fora
+da escala", com o valor máximo anotado, e a linha pontilhada da
+mediana mostra onde de fato está o custo típico da chamada. O
+episódio ilustra por que, para chamadas de dezenas de nanossegundos,
+a mediana é um estimador mais robusto do que a média: um único
+evento externo, irrelevante para o algoritmo, é suficiente para
+triplicar a média de 100 execuções. É também esse ponto que produz o
+"salto" espúrio da curva da recursiva em n = 500.000 no gráfico de
+tempo médio da Seção 4.
+
+Descontado esse episódio, a leitura dos tempos é a mesma da versão
+iterativa: chamadas da ordem de dezenas de nanossegundos, com o
+custo da leitura do relógio e da instrumentação pesando de forma
+relevante, crescimento suave com o número de níveis e, em
+n = 1.000.000, o efeito adicional das faltas de cache nos primeiros
+acessos ao vetor de 4 MB. A evidência sólida do comportamento
+O(log n) continua sendo a contagem determinística de operações, que
+reproduz 3k + 1 e k em todos os tamanhos.
 
 ## 3. Análise Assintótica Teórica
 
@@ -469,18 +587,18 @@ O(log n)), enquanto a versão iterativa usa espaço O(1).
 
 | n | inverter | buscaSequencial | buscaBinariaIterativa | buscaBinariaRecursiva |
 |---|---|---|---|---|
-| 1.000 | 0,000000391 | - | - | - |
-| 50.000 | 0,000019028 | - | - | - |
-| 100.000 | 0,000038122 | - | - | - |
-| 500.000 | 0,000190029 | - | - | - |
-| 1.000.000 | 0,000394855 | - | - | - |
+| 1.000 | 0,000000226 | 0,000000262 | 0,000000024 | 0,000000024 |
+| 50.000 | 0,000011899 | 0,000011108 | 0,000000028 | 0,000000032 |
+| 100.000 | 0,000023007 | 0,000021520 | 0,000000029 | 0,000000034 |
+| 500.000 | 0,000113124 | 0,000106299 | 0,000000032 | 0,000000124 |
+| 1.000.000 | 0,000237580 | 0,000223672 | 0,000000036 | 0,000000040 |
 
 ![Tempo médio de execução (escala log-log)](graficos/tempo_medio.png)
 
 ### 4.2 Comparações no pior caso
 
-Valores teóricos da Seção 3; os das buscas serão confirmados pelo
-benchmark assim que as funções estiverem implementadas.
+Valores medidos pelo benchmark, que coincidiram com os teóricos da
+Seção 3 em todos os tamanhos e para os quatro algoritmos.
 
 | n | inverter | buscaSequencial | buscaBinariaIterativa | buscaBinariaRecursiva |
 |---|---|---|---|---|
@@ -494,8 +612,8 @@ benchmark assim que as funções estiverem implementadas.
 
 ### 4.3 Atribuições no pior caso
 
-Valores teóricos da Seção 3; os das buscas serão confirmados pelo
-benchmark assim que as funções estiverem implementadas.
+Valores medidos pelo benchmark, que coincidiram com os teóricos da
+Seção 3 em todos os tamanhos e para os quatro algoritmos.
 
 | n | inverter | buscaSequencial | buscaBinariaIterativa | buscaBinariaRecursiva |
 |---|---|---|---|---|
@@ -525,16 +643,22 @@ grupos bem distintos.
 O(n) no pior caso, e no gráfico log-log de tempo isso aparece como
 duas retas de inclinação 1, aproximadamente paralelas: multiplicar
 `n` por 10 multiplica o tempo por cerca de 10 (para o `inverter`,
-de 38,1 µs em n = 100.000 para 394,9 µs em n = 1.000.000, razão de
-10,4; para a busca sequencial, de [X] s para [X] s). A diferença entre os dois está na
+de 23,0 µs em n = 100.000 para 237,6 µs em n = 1.000.000, razão de
+10,3; para a busca sequencial, de 21,5 µs para 223,7 µs, razão de
+10,4). A diferença entre os dois está na
 constante. A busca sequencial faz cerca de 4 vezes mais comparações
 que o `inverter` para o mesmo `n` (2n + 1 contra ⌊n/2⌋ + 1), porque
 visita todos os `n` elementos e realiza duas comparações em cada um,
 enquanto o `inverter` percorre apenas n/2 pares com uma comparação
 por par. Em atribuições a relação se inverte (n + 1 contra
 5⌊n/2⌋ + 2), pois a inversão escreve no vetor e a busca só avança um
-índice. Em tempo, a busca sequencial ficou [X] vezes
-[mais lenta / mais rápida] que a inversão em n = 1.000.000.
+índice. Em tempo, porém, a busca sequencial ficou ligeiramente **mais
+rápida** que a inversão (0,94× em n = 1.000.000), apesar de fazer 4×
+mais comparações: ela apenas lê o vetor, em varredura contígua e com
+um desvio perfeitamente previsível, enquanto a inversão lê e escreve
+em dois pontos distantes a cada iteração. É um lembrete de que a
+contagem de operações classifica os algoritmos (ambos O(n)), mas a
+constante de tempo real depende da arquitetura.
 
 **Algoritmos logarítmicos.** As duas buscas binárias são
 indistinguíveis em número de comparações — a versão recursiva
@@ -544,19 +668,25 @@ n = 1.000.000 são 61 comparações contra 2.000.001. O crescimento com
 `n` é tão lento que quase não aparece nos gráficos: multiplicar `n`
 por 1.000 (de 1.000 para 1.000.000) apenas dobra o número de
 iterações, de 10 para 20. A diferença entre as duas versões está no
-tempo, não nas operações: a recursiva ficou [X]% mais lenta que a
-iterativa em n = 1.000.000, por causa do custo de cada chamada de
+tempo, não nas operações: a recursiva ficou cerca de 11 % mais
+lenta que a iterativa em n = 1.000.000 (40 contra 36 ns pelas
+médias; 13 % pelas medianas), por causa do custo de cada chamada de
 função (empilhar parâmetros e endereço de retorno), que se repete a
 cada nível da recursão. Trata-se de uma diferença de constante, que
-não muda a classe O(log n).
+não muda a classe O(log n). O ponto da recursiva em n = 500.000 no
+gráfico de tempo médio, visivelmente fora da reta, não contradiz
+isso: como discutido na Seção 2.5, ele resulta de uma única medição
+de 8,27 µs (uma interrupção do sistema) que triplicou a média de 100
+execuções cuja mediana é de 41 ns.
 
 **Tempo versus contagem de operações.** Uma chamada de busca binária
-em um vetor de um milhão de elementos leva da ordem de [X] ns, valor
+em um vetor de um milhão de elementos leva de 36 a 40 ns, valor
 próximo da resolução prática do relógio e do custo da própria chamada
 a `clock_gettime`. Nessa escala, o tempo medido reflete tanto o
 algoritmo quanto o ruído do sistema (escalonamento, cache, variação
 de frequência), o que explica a maior dispersão relativa nas 100
-medições das buscas binárias. A contagem de operações, por outro
+medições das buscas binárias e a sensibilidade da média a um único
+evento externo. A contagem de operações, por outro
 lado, é determinística e reproduz exatamente as funções T(n) da
 Seção 3 em todos os tamanhos. Isso justifica o uso da contagem de
 operações como métrica principal de comparação, com o tempo servindo
@@ -576,7 +706,7 @@ literalmente a função T(n) calculada.
 
 | Integrante | Contribuição |
 |---|---|
-| João Pedro Oliveira | Implementação da função `inverter`; estruturação do projeto (gerador de dados de teste, benchmark de tempo e de operações, scripts de gráficos); estrutura do relatório, metodologia e análise teórica de referência dos quatro algoritmos |
-| *(nome)* | Implementação da função `buscaSequencial` e análise empírica correspondente |
-| *(nome)* | Implementação da função `buscaBinariaIterativa` e análise empírica correspondente |
-| *(nome)* | Implementação da função `buscaBinariaRecursiva` e análise empírica correspondente |
+| João Pedro Oliveira | Implementação da função `inverter`; estruturação do projeto (gerador de dados de teste, benchmark de tempo e de operações, scripts de gráficos); estrutura do relatório, metodologia e análise teórica de referência dos quatro algoritmos; integração das quatro funções e rodada única de medições |
+| Matheus Amaral Alves | Implementação da função `buscaSequencial` e análise empírica correspondente |
+| Lorenzo Vittorio Rudnik Spelta | Implementação da função `buscaBinariaIterativa`, testes de corretude e análise empírica correspondente |
+| Gustavo Cestari Cassaro Mendes | Implementação da função `buscaBinariaRecursiva` e análise empírica correspondente |

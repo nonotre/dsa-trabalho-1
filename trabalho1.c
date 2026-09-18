@@ -17,7 +17,7 @@
  *   - Joao Pedro Oliveira - 17930847
  *   - Matheus Amaral Alves - 17932255
  *   - Lorenzo Vittorio Rudnik Spelta - 17906700
- *   - NOME COMPLETO 4 - NUSP
+ *   - Gustavo Cestari Cassaro Mendes - 17990719
  */
 
 #include <stdio.h>

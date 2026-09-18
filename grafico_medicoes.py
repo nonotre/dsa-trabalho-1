@@ -28,6 +28,7 @@ import matplotlib.pyplot as plt
 CSV_DETALHADO = "resultados/tempos_detalhados.csv"
 CSV_RESUMO = "resultados/resultado_completo.csv"
 PASTA_SAIDA = "graficos"
+LIMITE_OUTLIER = 3.0  # pontos acima de 3x a mediana sao anotados fora da escala
 
 
 def algoritmos_implementados(caminho_resumo):
@@ -68,9 +69,23 @@ def plotar_algoritmo(alg, por_tamanho):
         repeticoes = [p[0] for p in pares]
         tempos = [p[1] * 1e6 for p in pares]  # segundos -> microssegundos
         media = sum(tempos) / len(tempos)
+        mediana = sorted(tempos)[len(tempos) // 2]
 
-        eixo.scatter(repeticoes, tempos, s=12, alpha=0.6, label="medicao")
+        # Um unico pico muito alto (ex: uma interrupcao do SO de varios
+        # microssegundos numa chamada de 40 ns) achataria todo o painel.
+        # Limita o eixo y a LIMITE_OUTLIER x a mediana e anota quantos
+        # pontos ficaram fora da escala, com o valor do maior deles.
+        teto = LIMITE_OUTLIER * mediana
+        fora = [t for t in tempos if t > teto]
+        dentro = [(r, t) for r, t in zip(repeticoes, tempos) if t <= teto]
+
+        eixo.scatter([r for r, _ in dentro], [t for _, t in dentro], s=12, alpha=0.6, label="medicao")
         eixo.axhline(media, color="red", linestyle="--", linewidth=1, label=f"media = {media:.3f} us")
+        eixo.axhline(mediana, color="gray", linestyle=":", linewidth=1, label=f"mediana = {mediana:.3f} us")
+        if fora:
+            eixo.scatter([r for r, t in zip(repeticoes, tempos) if t > teto], [teto] * len(fora),
+                         marker="^", color="red", s=30, label=f"{len(fora)} fora da escala (max {max(fora):.2f} us)")
+            eixo.set_ylim(top=teto * 1.05)
         eixo.set_title(f"n = {tamanho:,}".replace(",", "."))
         eixo.set_xlabel(f"Execucao (1 a {len(pares)})")
         eixo.grid(True, linestyle="--", alpha=0.4)
