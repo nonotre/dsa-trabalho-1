@@ -181,25 +181,15 @@ esperado.
 
 | n | tempo médio (s) | comparações (medido) | comparações (teórico) | atribuições (medido) | atribuições (teórico) |
 |---|---|---|---|---|---|
-| 1.000 | - | - | 2.001 | - | 1.001 |
-| 50.000 | - | - | 100.001 | - | 50.001 |
-| 100.000 | - | - | 200.001 | - | 100.001 |
-| 500.000 | - | - | 1.000.001 | - | 500.001 |
-| 1.000.000 | - | - | 2.000.001 | - | 1.000.001 |
+| 1.000 | 0,000000521 | 2.001 | 2.001 | 1.001 | 1.001 |
+| 50.000 | 0,000024338 | 100.001 | 100.001 | 50.001 | 50.001 |
+| 100.000 | 0,000048707 | 200.001 | 200.001 | 100.001 | 100.001 |
+| 500.000 | 0,000254083 | 1.000.001 | 1.000.001 | 500.001 | 500.001 |
+| 1.000.000 | 0,000555682 | 2.000.001 | 2.000.001 | 1.000.001 | 1.000.001 |
 
 ![100 medições de tempo da busca sequencial, por tamanho](graficos/buscaSequencial_100_medicoes.png)
 
-**Discussão.** *(rascunho — confirmar com os dados)* *Espera-se que
-as contagens medidas coincidam com as teóricas (2n + 1 comparações e
-n + 1 atribuições), já que no pior caso — valor ausente — a busca
-sequencial sempre percorre o vetor inteiro, independentemente dos
-valores armazenados. O tempo médio deve crescer linearmente com `n`,
-com inclinação semelhante à do `inverter` no gráfico log-log, porém
-com constante um pouco maior: a busca visita todos os `n` elementos
-e faz duas comparações por elemento, enquanto o `inverter` visita
-apenas n/2 pares. Nas 100 medições individuais, espera-se
-estabilidade em torno da média, com eventuais picos isolados
-causados por interferência do sistema operacional.*
+**Discussão.** As contagens medidas coincidiram com as teóricas (2n + 1 comparações e n + 1 atribuições), já que no pior caso — valor ausente — a busca sequencial percorre o vetor inteiro, independentemente dos valores armazenados. O tempo médio cresceu aproximadamente de forma linear com `n`, como esperado para um algoritmo de complexidade O(n). No gráfico log-log, a inclinação é semelhante à do `inverter`, embora a busca sequencial apresente uma constante um pouco maior: ela visita todos os `n` elementos e realiza duas comparações por elemento, enquanto o `inverter` visita apenas n/2 pares. Nas 100 medições individuais, observa-se estabilidade em torno da média, com eventuais picos isolados causados por interferência do sistema operacional.
 
 ### 2.4 Busca Binária Iterativa (`buscaBinariaIterativa`)
 

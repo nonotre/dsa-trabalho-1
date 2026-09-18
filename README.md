@@ -9,7 +9,7 @@ tempo de execução, contagem de operações e análise assintótica.
 | Função | Responsável | Status |
 |---|---|---|
 | `inverter` | João Pedro Oliveira | feito |
-| `buscaSequencial` | *(nome)* | TODO |
+| `buscaSequencial` | Matheus Amaral Alves | feito |
 | `buscaBinariaIterativa` | *(nome)* | TODO |
 | `buscaBinariaRecursiva` | *(nome)* | TODO |
 
